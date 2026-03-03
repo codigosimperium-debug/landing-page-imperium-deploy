@@ -1,27 +1,24 @@
 ﻿import LeadForm from "@/components/LeadForm";
-import Section from "@/components/Section";
+import Reveal, { RevealItem } from "@/components/Reveal";
 
 export default function TreinamentoFuncionalPage() {
   return (
-    <Section
-      title="Treinamento Funcional com Método"
-      subtitle="Serviço Imperium"
-      className="service-section"
-    >
-      <div className="grid gap-6 lg:grid-cols-[1.05fr_1fr] lg:items-start">
-        <div className="space-y-5">
-          <div className="placeholder-block service-placeholder" aria-hidden="true" />
-          <p className="max-w-xl text-base leading-relaxed md:text-lg">
-            Condicionamento e performance acompanhados por equipe estruturada e
-            presente.
+    <Reveal as="section" className="imperium-section service-page" blur>
+      <div className="imperium-container">
+        <RevealItem className="mb-8 max-w-3xl">
+          <p className="text-xs uppercase tracking-[0.18em] text-[var(--color-6)]">Serviço Imperium</p>
+          <h1 className="mt-3 text-[clamp(1.9rem,3.8vw,3.1rem)]">Treinamento Funcional com Método</h1>
+          <p className="mt-4 text-base md:text-lg">
+            Condicionamento e performance acompanhados por equipe estruturada,
+            com direção clara de evolução.
           </p>
-        </div>
+        </RevealItem>
 
         <LeadForm
           interesse="Treinamento Funcional"
           submitLabel="Agendar Avaliação Funcional"
         />
       </div>
-    </Section>
+    </Reveal>
   );
 }

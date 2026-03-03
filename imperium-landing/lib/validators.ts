@@ -18,7 +18,9 @@ export type LeadPayload = {
   interesse: InterestType;
   nomeCompleto: string;
   whatsapp: string;
+  email: string;
   unidade: UnitType;
+  objetivoPrincipal: string;
   page_path: string;
   utm_source: string;
   utm_medium: string;
@@ -54,6 +56,10 @@ function toDigits(value: string): string {
   return value.replace(/\D/g, "");
 }
 
+function isValidEmail(email: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i.test(email);
+}
+
 export function formatWhatsApp(value: string): string {
   const digits = toDigits(value).slice(0, 11);
 
@@ -83,7 +89,9 @@ export function buildLeadValidationInput(
     interesse: toSanitizedText(payload.interesse, 80) as InterestType,
     nomeCompleto: toSanitizedText(payload.nomeCompleto, 120),
     whatsapp: toSanitizedText(payload.whatsapp, 30),
+    email: toSanitizedText(payload.email, 160).toLowerCase(),
     unidade: toSanitizedText(payload.unidade, 60) as UnitType,
+    objetivoPrincipal: toSanitizedText(payload.objetivoPrincipal, 120),
     page_path: toSanitizedText(payload.page_path, 120),
     utm_source: toSanitizedText(payload.utm_source, 120),
     utm_medium: toSanitizedText(payload.utm_medium, 120),
@@ -111,8 +119,16 @@ export function validateLeadPayload(input: LeadPayload): ValidationResult {
     errors.push("Informe um WhatsApp válido.");
   }
 
+  if (!isValidEmail(input.email)) {
+    errors.push("Informe um e-mail válido.");
+  }
+
   if (!VALID_UNITS.includes(input.unidade)) {
     errors.push("Selecione uma unidade válida.");
+  }
+
+  if (input.objetivoPrincipal.length < 3 || input.objetivoPrincipal.length > 120) {
+    errors.push("Objetivo principal inválido.");
   }
 
   if (!input.page_path.startsWith("/")) {

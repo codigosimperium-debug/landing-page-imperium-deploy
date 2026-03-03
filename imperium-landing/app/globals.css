@@ -30,7 +30,7 @@ body {
   background: var(--color-5);
   color: #fff;
   font-family: var(--font-body), sans-serif;
-  line-height: 1.6;
+  line-height: 1.62;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   position: relative;
@@ -39,12 +39,12 @@ body {
 body::before {
   content: "";
   position: fixed;
-  inset: -240px 0 auto;
-  height: 540px;
+  inset: -260px 0 auto;
+  height: 620px;
   pointer-events: none;
   background: radial-gradient(
-    60% 50% at 50% 10%,
-    color-mix(in srgb, var(--color-4) 20%, transparent) 0%,
+    64% 48% at 50% 14%,
+    color-mix(in srgb, var(--color-4) 22%, transparent) 0%,
     transparent 72%
   );
   z-index: 0;
@@ -63,8 +63,8 @@ h3,
 h4 {
   margin: 0;
   font-family: var(--font-display), sans-serif;
-  letter-spacing: -0.03em;
-  line-height: 1.15;
+  letter-spacing: -0.032em;
+  line-height: 1.12;
 }
 
 p {
@@ -99,7 +99,7 @@ textarea {
 }
 
 .imperium-section {
-  padding: clamp(3.6rem, 6.3vw, 5.8rem) 0;
+  padding: clamp(3.7rem, 6.2vw, 5.9rem) 0;
 }
 
 .imperium-section-alt {
@@ -109,32 +109,61 @@ textarea {
 .imperium-card {
   background: color-mix(in srgb, var(--color-11) 95%, transparent);
   border: 1px solid var(--color-2);
-  border-radius: 1.1rem;
+  border-radius: 16px;
+}
+
+.home-grid {
+  position: relative;
+}
+
+.home-grid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--color-2) 30%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--color-2) 28%, transparent) 1px, transparent 1px);
+  background-size: 52px 52px;
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 18%, #000 82%, transparent 100%);
 }
 
 .hero-section {
-  padding-top: clamp(4rem, 8vw, 7rem);
+  padding-top: clamp(4.2rem, 8.2vw, 7.1rem);
 }
 
-.premium-hero {
+.hero-shell {
   position: relative;
   overflow: hidden;
 }
 
-.premium-hero::after {
+.hero-shell::after {
   content: "";
   position: absolute;
-  top: -140px;
   right: -120px;
-  width: 380px;
-  height: 380px;
+  top: -110px;
+  width: 360px;
+  height: 360px;
   border-radius: 999px;
   pointer-events: none;
-  background: radial-gradient(circle, color-mix(in srgb, var(--color-4) 24%, transparent) 0%, transparent 70%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--color-4) 26%, transparent) 0%, transparent 70%);
 }
 
-.hero-kicker {
+.section-kicker {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
   color: var(--color-6);
+}
+
+.section-title {
+  margin-top: 0.55rem;
+  font-size: clamp(1.7rem, 3vw, 2.7rem);
+}
+
+.section-copy {
+  margin-top: 0.95rem;
+  font-size: clamp(0.98rem, 1.4vw, 1.08rem);
 }
 
 .imperium-input,
@@ -144,9 +173,9 @@ textarea {
   border: 1px solid var(--color-7);
   background: var(--color-12);
   color: #fff;
-  border-radius: 0.85rem;
+  border-radius: 14px;
   padding: 0.8rem 0.95rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .imperium-input:hover,
@@ -167,8 +196,8 @@ textarea {
   border: 1px solid color-mix(in srgb, var(--color-4) 65%, var(--color-2));
   background: color-mix(in srgb, var(--color-12) 88%, var(--color-4) 12%);
   color: color-mix(in srgb, var(--color-1) 86%, #fff 14%);
-  border-radius: 0.75rem;
-  padding: 0.65rem 0.8rem;
+  border-radius: 12px;
+  padding: 0.64rem 0.8rem;
 }
 
 .cta-primary {
@@ -179,14 +208,14 @@ textarea {
   background: var(--color-4);
   color: #fff;
   font-weight: 700;
-  border-radius: 0.82rem;
+  border-radius: 14px;
   padding: 0.8rem 1.25rem;
   transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .cta-primary:hover {
   background: color-mix(in srgb, var(--color-4) 76%, #fff 24%);
-  box-shadow: 0 8px 24px color-mix(in srgb, var(--color-4) 24%, transparent);
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--color-4) 24%, transparent);
   transform: translateY(-2px);
 }
 
@@ -197,28 +226,165 @@ textarea {
   box-shadow: none;
 }
 
-.placeholder-block {
+.cta-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: 1px solid var(--color-2);
-  border-radius: 1rem;
-  background: color-mix(in srgb, var(--color-12) 92%, transparent);
-  min-height: 170px;
+  background: color-mix(in srgb, var(--color-12) 88%, transparent);
+  color: var(--color-1);
+  font-weight: 600;
+  border-radius: 14px;
+  padding: 0.75rem 1.2rem;
+  transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
-.service-placeholder {
-  position: relative;
+.cta-secondary:hover {
+  border-color: color-mix(in srgb, var(--color-4) 60%, var(--color-2));
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.feature-card {
+  min-height: 174px;
+  border-radius: 16px;
+}
+
+.step-card {
+  border-radius: 16px;
+}
+
+.step-index {
+  color: var(--color-6);
+  font-family: var(--font-display), sans-serif;
+  letter-spacing: 0.08em;
+  font-size: 0.82rem;
+}
+
+.unidade-card {
+  border-radius: 16px;
+}
+
+.faq-item {
+  border-radius: 16px;
   overflow: hidden;
 }
 
-.service-placeholder::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(circle at 75% 20%, color-mix(in srgb, var(--color-4) 16%, transparent), transparent 58%);
+.faq-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border: 0;
+  padding: 1rem 1.1rem;
+  background: transparent;
+  color: #fff;
+  text-align: left;
+  cursor: pointer;
 }
 
-.text-muted {
+.faq-indicator {
   color: var(--color-6);
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.faq-answer {
+  border-top: 1px solid color-mix(in srgb, var(--color-2) 72%, transparent);
+  padding: 0.85rem 1.1rem 1rem;
+  font-size: 0.95rem;
+  color: var(--color-1);
+}
+
+.lead-console {
+  border-radius: 16px;
+}
+
+.submit-confirmation {
+  border: 1px solid color-mix(in srgb, var(--color-4) 55%, var(--color-2));
+  background: color-mix(in srgb, var(--color-12) 88%, var(--color-4) 12%);
+  border-radius: 12px;
+  padding: 0.7rem 0.75rem;
+  animation: submitSnap 0.32s ease-out;
+}
+
+.submit-badge {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid color-mix(in srgb, var(--color-4) 65%, var(--color-2));
+  border-radius: 999px;
+  padding: 0.2rem 0.58rem;
+  color: #fff;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.submit-progress {
+  margin-top: 0.6rem;
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-2) 76%, transparent);
+  overflow: hidden;
+}
+
+.submit-progress > span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-4) 84%, #fff 16%);
+  transition: width 0.09s linear;
+}
+
+.protocol-panel {
+  border-radius: 16px;
+}
+
+.protocol-kicker {
+  color: var(--color-6);
+}
+
+.protocol-panel ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.protocol-panel li {
+  display: flex;
+  gap: 0.45rem;
+  color: var(--color-1);
+}
+
+.protocol-panel li > span {
+  color: var(--color-6);
+}
+
+.protocol-image-slot {
+  height: 172px;
+  border-radius: 14px;
+  border: 1px solid var(--color-2);
+  overflow: hidden;
+}
+
+.protocol-image-placeholder {
+  display: grid;
+  place-items: center;
+  background:
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--color-12) 92%, transparent),
+      color-mix(in srgb, var(--color-11) 88%, transparent)
+    );
+  color: var(--color-6);
+  font-size: 0.86rem;
+}
+
+.service-page {
+  padding-top: clamp(3.5rem, 5.9vw, 4.8rem);
 }
 
 .header-blur {
@@ -252,7 +418,7 @@ textarea {
 }
 
 .brand-logo:hover {
-  transform: scale(1.02);
+  transform: scale(1.01);
   opacity: 0.95;
 }
 
@@ -262,11 +428,11 @@ textarea {
 
 .service-card:hover {
   border-color: color-mix(in srgb, var(--color-4) 58%, var(--color-2));
-  box-shadow: 0 16px 32px color-mix(in srgb, var(--color-4) 12%, transparent);
+  box-shadow: 0 12px 24px color-mix(in srgb, var(--color-4) 12%, transparent);
 }
 
 .whatsapp-floating {
-  animation: whatsappPulse 1.85s ease-in-out infinite;
+  animation: whatsappPulse 1.9s ease-in-out infinite;
 }
 
 .whatsapp-floating:hover {
@@ -298,18 +464,26 @@ textarea {
   transform: translateY(-50%) translateX(0);
 }
 
-.service-section {
-  padding-top: clamp(3.3rem, 6vw, 4.8rem);
-}
-
 @keyframes whatsappPulse {
   0%,
   100% {
-    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-4) 32%, transparent);
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-4) 30%, transparent);
   }
 
   50% {
     box-shadow: 0 0 0 8px color-mix(in srgb, var(--color-4) 0%, transparent);
+  }
+}
+
+@keyframes submitSnap {
+  0% {
+    transform: scale(0.99);
+    opacity: 0.72;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
   }
 }
 
@@ -318,8 +492,23 @@ textarea {
     display: none;
   }
 
+  .hero-shell::after {
+    width: 280px;
+    height: 280px;
+    right: -120px;
+    top: -90px;
+  }
+
   body::before {
     inset: -170px 0 auto;
+  }
+
+  .faq-trigger {
+    padding: 0.9rem 0.95rem;
+  }
+
+  .faq-answer {
+    padding: 0.8rem 0.95rem 0.95rem;
   }
 }
 

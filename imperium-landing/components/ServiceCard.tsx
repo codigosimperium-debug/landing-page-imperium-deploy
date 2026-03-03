@@ -8,6 +8,7 @@ type ServiceCardProps = {
   title: string;
   description: string;
   icon: "pilates" | "ems" | "funcional";
+  buttonLabel?: string;
 };
 
 function ServiceIcon({ icon }: Pick<ServiceCardProps, "icon">) {
@@ -46,7 +47,13 @@ function ServiceIcon({ icon }: Pick<ServiceCardProps, "icon">) {
   );
 }
 
-export default function ServiceCard({ href, title, description, icon }: ServiceCardProps) {
+export default function ServiceCard({
+  href,
+  title,
+  description,
+  icon,
+  buttonLabel = "Saiba Mais",
+}: ServiceCardProps) {
   const shouldReduceMotion = useReducedMotion();
 
   return (
@@ -64,7 +71,7 @@ export default function ServiceCard({ href, title, description, icon }: ServiceC
       <p className="mt-3 text-sm md:text-base">{description}</p>
 
       <Link href={href} className="cta-primary mt-6 w-full text-center">
-        Ver Serviço
+        {buttonLabel}
       </Link>
     </motion.article>
   );

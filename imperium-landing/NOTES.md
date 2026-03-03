@@ -1,22 +1,22 @@
 ﻿# Imperium Landing Notes
 
-## Logo transparente no header
+## Logo no Header
 
-O header tenta carregar os assets nesta ordem:
+O header usa esta ordem de tentativa:
 
-1. `/public/logo-imperium-transparent.png`
-2. `/public/logo-imperium.png` (fallback automático)
+1. `/public/logo-imperium-transparent.png` (preferencial)
+2. `/public/logo-imperium.png` (fallback)
 
-Isso mantém o fluxo seguro sem perder a marca original.
+A estrutura visual já está preparada para logo sem fundo aparente.
 
-## Como trocar a logo final
+## Como atualizar corretamente
 
-1. Exporte a versão oficial transparente da marca em PNG.
-2. Salve como `logo-imperium-transparent.png` em `/public`.
-3. Mantenha `logo-imperium.png` intacto como backup.
-4. Reinicie o servidor (`npm run dev`) para validar no header.
+1. Exporte a logo oficial em PNG com transparência real.
+2. Salve como `logo-imperium-transparent.png` na pasta `/public`.
+3. Mantenha `logo-imperium.png` como backup, sem alterar proporção.
+4. Reinicie o projeto para validar o resultado no header.
 
-## Observação
+## Regra de qualidade
 
-O arquivo `logo-imperium-transparent.png` atual foi gerado por keying do fundo cinza.
-Se o time de design enviar um PNG transparente oficial, substitua esse arquivo.
+Se só houver logo com fundo sólido, não force remoção visual por CSS.
+A troca deve ser feita com asset transparente oficial.
