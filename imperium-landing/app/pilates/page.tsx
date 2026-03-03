@@ -1,28 +1,24 @@
 ﻿import LeadForm from "@/components/LeadForm";
+import Section from "@/components/Section";
 
 export default function PilatesPage() {
   return (
-    <section className="imperium-section">
-      <div className="imperium-container">
-        <div className="mx-auto max-w-3xl space-y-6">
-          <div className="placeholder-block" aria-hidden="true" />
-
-          <div className="space-y-3">
-            <h1 className="text-3xl md:text-4xl">
-              Pilates com Acompanhamento Individualizado
-            </h1>
-            <p className="text-base md:text-lg">
-              Fortalecimento, mobilidade e consciência corporal com acompanhamento
-              técnico estruturado dentro do padrão Imperium de atendimento.
-            </p>
-          </div>
-
-          <LeadForm
-            interesse="Pilates"
-            submitLabel="Agendar Avaliação no Pilates"
-          />
+    <Section
+      title="Pilates com Acompanhamento Individualizado"
+      subtitle="Serviço Imperium"
+      className="service-section"
+    >
+      <div className="grid gap-6 lg:grid-cols-[1.05fr_1fr] lg:items-start">
+        <div className="space-y-5">
+          <div className="placeholder-block service-placeholder" aria-hidden="true" />
+          <p className="max-w-xl text-base leading-relaxed md:text-lg">
+            Fortalecimento, mobilidade e consciência corporal com acompanhamento
+            técnico estruturado dentro do padrão Imperium de atendimento.
+          </p>
         </div>
+
+        <LeadForm interesse="Pilates" submitLabel="Agendar Avaliação no Pilates" />
       </div>
-    </section>
+    </Section>
   );
 }

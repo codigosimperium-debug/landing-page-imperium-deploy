@@ -3,6 +3,7 @@ import { Manrope, Sora } from "next/font/google";
 import Script from "next/script";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import SmoothScroll from "@/components/SmoothScroll";
 import "./globals.css";
 
 const sora = Sora({
@@ -18,7 +19,7 @@ const manrope = Manrope({
 const pixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID;
 
 export const metadata: Metadata = {
-  title: "Imperium Academia",
+  title: "Imperium Academia | Atendimento Estruturado",
   description: "Imperium Academia - Referência em Atendimento Estruturado",
 };
 
@@ -30,6 +31,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={`${sora.variable} ${manrope.variable}`}>
+        <SmoothScroll />
         {pixelId ? (
           <>
             <Script id="meta-pixel-base" strategy="afterInteractive">
@@ -55,7 +57,7 @@ fbq('track', 'PageView');`}
         ) : null}
 
         <Header />
-        <main className="pt-24">{children}</main>
+        <main className="pt-24 lg:pt-28">{children}</main>
         <Footer />
       </body>
     </html>

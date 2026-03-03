@@ -30,7 +30,31 @@ body {
   background: var(--color-5);
   color: #fff;
   font-family: var(--font-body), sans-serif;
-  line-height: 1.5;
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: -240px 0 auto;
+  height: 540px;
+  pointer-events: none;
+  background: radial-gradient(
+    60% 50% at 50% 10%,
+    color-mix(in srgb, var(--color-4) 20%, transparent) 0%,
+    transparent 72%
+  );
+  z-index: 0;
+}
+
+main,
+header,
+footer {
+  position: relative;
+  z-index: 1;
 }
 
 h1,
@@ -39,7 +63,8 @@ h3,
 h4 {
   margin: 0;
   font-family: var(--font-display), sans-serif;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
 }
 
 p {
@@ -52,33 +77,64 @@ a {
   text-decoration: none;
 }
 
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
 ::placeholder {
   color: var(--color-9);
 }
 
+:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--color-4) 78%, #fff 22%);
+  outline-offset: 2px;
+}
+
 .imperium-container {
-  width: min(1120px, calc(100% - 2rem));
+  width: min(1160px, calc(100% - 2rem));
   margin-inline: auto;
 }
 
 .imperium-section {
-  padding: 4.5rem 0;
-}
-
-@media (max-width: 768px) {
-  .imperium-section {
-    padding: 3.5rem 0;
-  }
+  padding: clamp(3.6rem, 6.3vw, 5.8rem) 0;
 }
 
 .imperium-section-alt {
-  background: var(--color-8);
+  background: color-mix(in srgb, var(--color-8) 94%, transparent);
 }
 
 .imperium-card {
-  background: var(--color-11);
+  background: color-mix(in srgb, var(--color-11) 95%, transparent);
   border: 1px solid var(--color-2);
-  border-radius: 1rem;
+  border-radius: 1.1rem;
+}
+
+.hero-section {
+  padding-top: clamp(4rem, 8vw, 7rem);
+}
+
+.premium-hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.premium-hero::after {
+  content: "";
+  position: absolute;
+  top: -140px;
+  right: -120px;
+  width: 380px;
+  height: 380px;
+  border-radius: 999px;
+  pointer-events: none;
+  background: radial-gradient(circle, color-mix(in srgb, var(--color-4) 24%, transparent) 0%, transparent 70%);
+}
+
+.hero-kicker {
+  color: var(--color-6);
 }
 
 .imperium-input,
@@ -88,9 +144,15 @@ a {
   border: 1px solid var(--color-7);
   background: var(--color-12);
   color: #fff;
-  border-radius: 0.75rem;
-  padding: 0.8rem 0.9rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 0.85rem;
+  padding: 0.8rem 0.95rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.imperium-input:hover,
+.imperium-select:hover,
+.imperium-textarea:hover {
+  border-color: var(--color-13);
 }
 
 .imperium-input:focus,
@@ -98,7 +160,15 @@ a {
 .imperium-textarea:focus {
   outline: none;
   border-color: var(--color-4);
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-4) 40%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-4) 34%, transparent);
+}
+
+.form-error {
+  border: 1px solid color-mix(in srgb, var(--color-4) 65%, var(--color-2));
+  background: color-mix(in srgb, var(--color-12) 88%, var(--color-4) 12%);
+  color: color-mix(in srgb, var(--color-1) 86%, #fff 14%);
+  border-radius: 0.75rem;
+  padding: 0.65rem 0.8rem;
 }
 
 .cta-primary {
@@ -109,27 +179,42 @@ a {
   background: var(--color-4);
   color: #fff;
   font-weight: 700;
-  border-radius: 0.75rem;
-  padding: 0.75rem 1.2rem;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  border-radius: 0.82rem;
+  padding: 0.8rem 1.25rem;
+  transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .cta-primary:hover {
-  background: #0c3e70;
-  transform: translateY(-1px);
+  background: color-mix(in srgb, var(--color-4) 76%, #fff 24%);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--color-4) 24%, transparent);
+  transform: translateY(-2px);
 }
 
 .cta-primary:disabled {
   opacity: 0.7;
   cursor: not-allowed;
   transform: none;
+  box-shadow: none;
 }
 
 .placeholder-block {
   border: 1px solid var(--color-2);
   border-radius: 1rem;
-  background: var(--color-12);
+  background: color-mix(in srgb, var(--color-12) 92%, transparent);
   min-height: 170px;
+}
+
+.service-placeholder {
+  position: relative;
+  overflow: hidden;
+}
+
+.service-placeholder::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 75% 20%, color-mix(in srgb, var(--color-4) 16%, transparent), transparent 58%);
 }
 
 .text-muted {
@@ -137,7 +222,117 @@ a {
 }
 
 .header-blur {
-  background: color-mix(in srgb, var(--color-5) 88%, transparent);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--color-2);
+  background: color-mix(in srgb, var(--color-5) 80%, transparent);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-2) 82%, transparent);
+  transition: background-color 0.22s ease, border-color 0.22s ease;
+}
+
+.header-blur-scrolled {
+  background: color-mix(in srgb, var(--color-5) 92%, transparent);
+  border-bottom-color: var(--color-2);
+}
+
+.header-link {
+  color: var(--color-1);
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.header-link:hover {
+  color: #fff;
+}
+
+.brand-logo {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.brand-logo:hover {
+  transform: scale(1.02);
+  opacity: 0.95;
+}
+
+.service-card {
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.service-card:hover {
+  border-color: color-mix(in srgb, var(--color-4) 58%, var(--color-2));
+  box-shadow: 0 16px 32px color-mix(in srgb, var(--color-4) 12%, transparent);
+}
+
+.whatsapp-floating {
+  animation: whatsappPulse 1.85s ease-in-out infinite;
+}
+
+.whatsapp-floating:hover {
+  background: color-mix(in srgb, var(--color-4) 70%, #fff 30%);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px color-mix(in srgb, var(--color-4) 30%, transparent);
+}
+
+.whatsapp-tooltip {
+  position: absolute;
+  right: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%) translateX(6px);
+  border: 1px solid var(--color-2);
+  background: var(--color-11);
+  color: #fff;
+  font-size: 0.75rem;
+  letter-spacing: 0.01em;
+  border-radius: 0.5rem;
+  padding: 0.32rem 0.5rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  white-space: nowrap;
+}
+
+.whatsapp-floating:hover .whatsapp-tooltip {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+.service-section {
+  padding-top: clamp(3.3rem, 6vw, 4.8rem);
+}
+
+@keyframes whatsappPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-4) 32%, transparent);
+  }
+
+  50% {
+    box-shadow: 0 0 0 8px color-mix(in srgb, var(--color-4) 0%, transparent);
+  }
+}
+
+@media (max-width: 768px) {
+  .whatsapp-tooltip {
+    display: none;
+  }
+
+  body::before {
+    inset: -170px 0 auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

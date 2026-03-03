@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { captureAndStoreUtmParams } from "@/lib/utm";
 
@@ -14,53 +15,66 @@ const navLinks = [
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [logoError, setLogoError] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [logoSrc, setLogoSrc] = useState("/logo-imperium-transparent.png");
+  const [logoTextFallback, setLogoTextFallback] = useState(false);
 
   useEffect(() => {
     captureAndStoreUtmParams();
+
+    const onScroll = () => {
+      setIsScrolled(window.scrollY > 8);
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
 
+  const handleLogoError = () => {
+    if (logoSrc === "/logo-imperium-transparent.png") {
+      setLogoSrc("/logo-imperium.png");
+      return;
+    }
+
+    setLogoTextFallback(true);
+  };
+
   return (
-    <header className="header-blur fixed inset-x-0 top-0 z-50">
+    <motion.header
+      className={`header-blur fixed inset-x-0 top-0 z-50 ${isScrolled ? "header-blur-scrolled" : ""}`}
+      initial={{ opacity: 0, y: -18 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+    >
       <div className="imperium-container">
         <div className="flex h-20 items-center justify-between gap-4">
-          <Link href="/" className="shrink-0">
-            <div
-              className="rounded-lg border px-[14px] py-[10px]"
-              style={{
-                background: "#3D3D3D",
-                borderColor: "var(--color-2)",
-              }}
-            >
-              {logoError ? (
-                <span className="block text-sm font-semibold text-white md:text-base">
-                  Imperium Academia
-                </span>
-              ) : (
-                <>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src="/logo-imperium.png"
-                    alt="Imperium Academia"
-                    width={154}
-                    height={28}
-                    loading="eager"
-                    fetchPriority="high"
-                    className="h-6 w-auto object-contain md:h-7"
-                    onError={() => setLogoError(true)}
-                  />
-                </>
-              )}
-            </div>
+          <Link href="/" className="brand-logo focus-visible:outline-none">
+            {logoTextFallback ? (
+              <span className="text-base font-semibold text-white md:text-lg">Imperium Academia</span>
+            ) : (
+              <>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={logoSrc}
+                  alt="Imperium Academia"
+                  width={160}
+                  height={28}
+                  loading="eager"
+                  fetchPriority="high"
+                  className="h-6 w-auto object-contain md:h-7"
+                  onError={handleLogoError}
+                />
+              </>
+            )}
           </Link>
 
           <nav className="hidden items-center gap-6 lg:flex">
             {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-sm font-semibold text-[var(--color-1)] transition-colors hover:text-white"
-              >
+              <Link key={link.href} href={link.href} className="header-link">
                 {link.label}
               </Link>
             ))}
@@ -74,7 +88,7 @@ export default function Header() {
 
           <button
             type="button"
-            className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-[var(--color-2)] bg-[var(--color-11)] lg:hidden"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-[var(--color-2)] bg-[var(--color-11)] transition-colors hover:border-[var(--color-13)] lg:hidden"
             aria-label="Abrir menu"
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((prev) => !prev)}
@@ -89,14 +103,19 @@ export default function Header() {
       </div>
 
       {menuOpen ? (
-        <div className="border-t border-[var(--color-2)] bg-[var(--color-5)] lg:hidden">
+        <motion.div
+          className="border-t border-[var(--color-2)] bg-[var(--color-5)] lg:hidden"
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+        >
           <div className="imperium-container py-5">
             <nav className="flex flex-col gap-3">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="rounded-lg border border-[var(--color-2)] bg-[var(--color-11)] px-4 py-3 font-semibold text-[var(--color-1)]"
+                  className="rounded-lg border border-[var(--color-2)] bg-[var(--color-11)] px-4 py-3 font-semibold text-[var(--color-1)] transition-colors hover:border-[var(--color-13)] hover:text-white"
                   onClick={() => setMenuOpen(false)}
                 >
                   {link.label}
@@ -112,8 +131,8 @@ export default function Header() {
               Agendar Avaliação
             </Link>
           </div>
-        </div>
+        </motion.div>
       ) : null}
-    </header>
+    </motion.header>
   );
 }

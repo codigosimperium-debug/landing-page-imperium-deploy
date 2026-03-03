@@ -99,7 +99,7 @@ export default function LeadForm({ interesse, submitLabel }: LeadFormProps) {
   }
 
   return (
-    <form onSubmit={onSubmit} className="imperium-card space-y-4 p-6 md:p-8">
+    <form onSubmit={onSubmit} noValidate className="imperium-card space-y-5 p-6 md:p-8">
       <input type="hidden" name="interesse" value={interesse} />
 
       <div className="space-y-1.5">
@@ -109,7 +109,7 @@ export default function LeadForm({ interesse, submitLabel }: LeadFormProps) {
         <input
           id="nomeCompleto"
           name="nomeCompleto"
-          className="imperium-input"
+          className="imperium-input h-12"
           value={form.nomeCompleto}
           onChange={(event) =>
             setForm((prev) => ({ ...prev, nomeCompleto: event.target.value }))
@@ -126,7 +126,7 @@ export default function LeadForm({ interesse, submitLabel }: LeadFormProps) {
         <input
           id="whatsapp"
           name="whatsapp"
-          className="imperium-input"
+          className="imperium-input h-12"
           value={form.whatsapp}
           onChange={(event) =>
             setForm((prev) => ({
@@ -147,9 +147,11 @@ export default function LeadForm({ interesse, submitLabel }: LeadFormProps) {
         <select
           id="unidade"
           name="unidade"
-          className="imperium-select"
+          className="imperium-select h-12"
           value={form.unidade}
-          onChange={(event) => setForm((prev) => ({ ...prev, unidade: event.target.value }))}
+          onChange={(event) =>
+            setForm((prev) => ({ ...prev, unidade: event.target.value }))
+          }
           required
         >
           <option value="">Selecione uma unidade</option>
@@ -159,9 +161,9 @@ export default function LeadForm({ interesse, submitLabel }: LeadFormProps) {
         </select>
       </div>
 
-      {error ? <p className="text-sm text-red-300">{error}</p> : null}
+      {error ? <p className="form-error text-sm">{error}</p> : null}
 
-      <button type="submit" className="cta-primary w-full" disabled={loading}>
+      <button type="submit" className="cta-primary h-12 w-full" disabled={loading}>
         {loading ? (
           <span className="inline-flex items-center gap-2">
             <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
