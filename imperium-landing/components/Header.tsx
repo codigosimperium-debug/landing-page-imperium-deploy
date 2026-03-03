@@ -14,6 +14,7 @@ const navLinks = [
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [logoError, setLogoError] = useState(false);
 
   useEffect(() => {
     captureAndStoreUtmParams();
@@ -31,16 +32,25 @@ export default function Header() {
                 borderColor: "var(--color-2)",
               }}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/logo-imperium.png"
-                alt="Imperium Academia"
-                width={154}
-                height={28}
-                loading="eager"
-                fetchPriority="high"
-                className="h-6 w-auto object-contain md:h-7"
-              />
+              {logoError ? (
+                <span className="block text-sm font-semibold text-white md:text-base">
+                  Imperium Academia
+                </span>
+              ) : (
+                <>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/logo-imperium.png"
+                    alt="Imperium Academia"
+                    width={154}
+                    height={28}
+                    loading="eager"
+                    fetchPriority="high"
+                    className="h-6 w-auto object-contain md:h-7"
+                    onError={() => setLogoError(true)}
+                  />
+                </>
+              )}
             </div>
           </Link>
 
