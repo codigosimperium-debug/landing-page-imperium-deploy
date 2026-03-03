@@ -24,7 +24,7 @@ function createAuth() {
 
 export async function appendLeadRow(rowValues: string[]) {
   const spreadsheetId = getEnv("GOOGLE_SHEETS_ID");
-  const range = process.env.GOOGLE_SHEETS_RANGE || "A:O";
+  const range = process.env.GOOGLE_SHEETS_RANGE || "A:M";
 
   const auth = createAuth();
   const sheets = google.sheets({ version: "v4", auth });

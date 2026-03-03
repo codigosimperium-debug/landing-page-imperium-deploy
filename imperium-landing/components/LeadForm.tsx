@@ -19,14 +19,12 @@ type FormState = {
   nomeCompleto: string;
   whatsapp: string;
   unidade: string;
-  objetivoPrincipal: string;
 };
 
 const initialState: FormState = {
   nomeCompleto: "",
   whatsapp: "",
   unidade: "",
-  objetivoPrincipal: "",
 };
 
 export default function LeadForm({ interesse, submitLabel }: LeadFormProps) {
@@ -159,28 +157,6 @@ export default function LeadForm({ interesse, submitLabel }: LeadFormProps) {
           <option value="Chácara Parreiral">Chácara Parreiral</option>
           <option value="Jacaraípe">Jacaraípe</option>
         </select>
-      </div>
-
-      <div className="space-y-1.5">
-        <label
-          htmlFor="objetivoPrincipal"
-          className="text-sm font-semibold text-white"
-        >
-          Objetivo principal
-        </label>
-        <textarea
-          id="objetivoPrincipal"
-          name="objetivoPrincipal"
-          className="imperium-textarea"
-          value={form.objetivoPrincipal}
-          onChange={(event) =>
-            setForm((prev) => ({ ...prev, objetivoPrincipal: event.target.value }))
-          }
-          minLength={3}
-          maxLength={120}
-          rows={4}
-          required
-        />
       </div>
 
       {error ? <p className="text-sm text-red-300">{error}</p> : null}

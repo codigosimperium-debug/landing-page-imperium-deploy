@@ -19,7 +19,6 @@ export type LeadPayload = {
   nomeCompleto: string;
   whatsapp: string;
   unidade: UnitType;
-  objetivoPrincipal: string;
   page_path: string;
   utm_source: string;
   utm_medium: string;
@@ -85,7 +84,6 @@ export function buildLeadValidationInput(
     nomeCompleto: toSanitizedText(payload.nomeCompleto, 120),
     whatsapp: toSanitizedText(payload.whatsapp, 30),
     unidade: toSanitizedText(payload.unidade, 60) as UnitType,
-    objetivoPrincipal: toSanitizedText(payload.objetivoPrincipal, 120),
     page_path: toSanitizedText(payload.page_path, 120),
     utm_source: toSanitizedText(payload.utm_source, 120),
     utm_medium: toSanitizedText(payload.utm_medium, 120),
@@ -115,10 +113,6 @@ export function validateLeadPayload(input: LeadPayload): ValidationResult {
 
   if (!VALID_UNITS.includes(input.unidade)) {
     errors.push("Selecione uma unidade válida.");
-  }
-
-  if (input.objetivoPrincipal.length < 3 || input.objetivoPrincipal.length > 120) {
-    errors.push("Objetivo principal inválido.");
   }
 
   if (!input.page_path.startsWith("/")) {

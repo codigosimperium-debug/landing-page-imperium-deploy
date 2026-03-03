@@ -64,7 +64,6 @@ export async function POST(request: NextRequest) {
       lead.nomeCompleto,
       lead.whatsapp,
       lead.unidade,
-      lead.objetivoPrincipal,
       lead.page_path,
       lead.utm_source,
       lead.utm_medium,
