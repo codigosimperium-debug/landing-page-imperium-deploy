@@ -23,7 +23,6 @@ type FormState = {
   whatsapp: string;
   email: string;
   unidade: string;
-  objetivoPrincipal: string;
 };
 
 type SubmitState = "idle" | "sending" | "confirmed";
@@ -33,7 +32,6 @@ const initialState: FormState = {
   whatsapp: "",
   email: "",
   unidade: "",
-  objetivoPrincipal: "",
 };
 
 const REDIRECT_BY_INTEREST: Record<InterestType, string> = {
@@ -173,14 +171,18 @@ export default function LeadForm({
 
   return (
     <div className="grid gap-5 lg:grid-cols-[1.08fr_0.92fr]">
-      <form onSubmit={onSubmit} noValidate className="imperium-card lead-console space-y-4 p-6 md:p-8">
+      <form
+        onSubmit={onSubmit}
+        noValidate
+        className="imperium-card lead-console space-y-4 p-6 md:p-8"
+      >
         <input type="hidden" name="interesse" value={interesse} />
 
         <div className="space-y-1.5">
           <label htmlFor="nomeCompleto" className="text-sm font-semibold text-white">
             Nome completo
           </label>
-        <input
+          <input
             id="nomeCompleto"
             name="nomeCompleto"
             className="imperium-input h-[48px]"
@@ -188,10 +190,10 @@ export default function LeadForm({
             onChange={(event) =>
               setForm((prev) => ({ ...prev, nomeCompleto: event.target.value }))
             }
-          minLength={3}
-          disabled={submitState !== "idle"}
-          required
-        />
+            minLength={3}
+            disabled={submitState !== "idle"}
+            required
+          />
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
@@ -257,25 +259,6 @@ export default function LeadForm({
             <option value="Chácara Parreiral">Chácara Parreiral</option>
             <option value="Jacaraípe">Jacaraípe</option>
           </select>
-        </div>
-
-        <div className="space-y-1.5">
-          <label htmlFor="objetivoPrincipal" className="text-sm font-semibold text-white">
-            Objetivo principal
-          </label>
-          <textarea
-            id="objetivoPrincipal"
-            name="objetivoPrincipal"
-            className="imperium-textarea min-h-[116px]"
-            value={form.objetivoPrincipal}
-            onChange={(event) =>
-              setForm((prev) => ({ ...prev, objetivoPrincipal: event.target.value }))
-            }
-            minLength={3}
-            maxLength={120}
-            disabled={submitState !== "idle"}
-            required
-          />
         </div>
 
         {error ? <p className="form-error text-sm">{error}</p> : null}
