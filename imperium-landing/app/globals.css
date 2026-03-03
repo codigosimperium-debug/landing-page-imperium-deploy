@@ -1,0 +1,143 @@
+﻿@import "tailwindcss";
+
+:root {
+  --color-1: #c6c6c6;
+  --color-2: #3a3a3a;
+  --color-3: #292929;
+  --color-4: #08294a;
+  --color-5: #101010;
+  --color-6: #5a5a5a;
+  --color-7: #4a4a4a;
+  --color-8: #191919;
+  --color-9: #636363;
+  --color-10: #424242;
+  --color-11: #313131;
+  --color-12: #212121;
+  --color-13: #525252;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--color-5);
+  color: #fff;
+  font-family: var(--font-body), sans-serif;
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-family: var(--font-display), sans-serif;
+  letter-spacing: -0.02em;
+}
+
+p {
+  margin: 0;
+  color: var(--color-1);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+::placeholder {
+  color: var(--color-9);
+}
+
+.imperium-container {
+  width: min(1120px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.imperium-section {
+  padding: 4.5rem 0;
+}
+
+@media (max-width: 768px) {
+  .imperium-section {
+    padding: 3.5rem 0;
+  }
+}
+
+.imperium-section-alt {
+  background: var(--color-8);
+}
+
+.imperium-card {
+  background: var(--color-11);
+  border: 1px solid var(--color-2);
+  border-radius: 1rem;
+}
+
+.imperium-input,
+.imperium-select,
+.imperium-textarea {
+  width: 100%;
+  border: 1px solid var(--color-7);
+  background: var(--color-12);
+  color: #fff;
+  border-radius: 0.75rem;
+  padding: 0.8rem 0.9rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.imperium-input:focus,
+.imperium-select:focus,
+.imperium-textarea:focus {
+  outline: none;
+  border-color: var(--color-4);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-4) 40%, transparent);
+}
+
+.cta-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  background: var(--color-4);
+  color: #fff;
+  font-weight: 700;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1.2rem;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.cta-primary:hover {
+  background: #0c3e70;
+  transform: translateY(-1px);
+}
+
+.cta-primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.placeholder-block {
+  border: 1px solid var(--color-2);
+  border-radius: 1rem;
+  background: var(--color-12);
+  min-height: 170px;
+}
+
+.text-muted {
+  color: var(--color-6);
+}
+
+.header-blur {
+  background: color-mix(in srgb, var(--color-5) 88%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--color-2);
+}
