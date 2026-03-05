@@ -2,20 +2,29 @@ import path from "node:path";
 import { knex, type Knex } from "knex";
 import { config } from "./config";
 
-const mustUseSsl =
-  config.databaseUrl.includes("sslmode=require") ||
-  config.databaseUrl.includes(".render.com");
+function shouldUseSsl(connectionString: string): boolean {
+  const url = connectionString.toLowerCase();
+  if (url.includes("sslmode=disable")) {
+    return false;
+  }
 
-const connectionConfig = mustUseSsl
-  ? {
+  return url.includes("sslmode=require");
+}
+
+function buildConnectionConfig() {
+  if (shouldUseSsl(config.databaseUrl)) {
+    return {
       connectionString: config.databaseUrl,
       ssl: { rejectUnauthorized: false },
-    }
-  : config.databaseUrl;
+    };
+  }
+
+  return config.databaseUrl;
+}
 
 export const db: Knex = knex({
   client: "pg",
-  connection: connectionConfig,
+  connection: buildConnectionConfig(),
   pool: {
     min: 0,
     max: 10,
