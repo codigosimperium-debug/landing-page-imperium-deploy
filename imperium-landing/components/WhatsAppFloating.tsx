@@ -34,7 +34,8 @@ export default function WhatsAppFloating() {
       target="_blank"
       rel="noreferrer"
       aria-label="Abrir WhatsApp"
-      className="whatsapp-floating fixed bottom-5 right-5 z-40 inline-flex h-[52px] w-[52px] items-center justify-center rounded-full border border-[var(--color-2)] bg-[var(--color-4)] text-white shadow-[0_10px_30px_rgba(0,0,0,0.3)] transition md:h-14 md:w-14"
+      data-track-click="whatsapp_floating"
+      className="whatsapp-floating fixed bottom-5 right-5 z-40 inline-flex h-[52px] w-[52px] items-center justify-center rounded-full border border-[var(--color-2)] bg-[var(--color-4)] text-white shadow-[0_10px_30px_rgba(0,0,0,0.3)] transition-colors duration-200 md:h-14 md:w-14"
     >
       <WhatsAppIcon />
       <span className="whatsapp-tooltip" role="tooltip">

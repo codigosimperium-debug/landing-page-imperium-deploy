@@ -3,7 +3,7 @@ import Reveal, { RevealItem } from "@/components/Reveal";
 
 export default function PilatesPage() {
   return (
-    <Reveal as="section" className="imperium-section service-page" blur>
+    <Reveal as="section" className="imperium-section service-page">
       <div className="imperium-container">
         <RevealItem className="mb-8 max-w-3xl">
           <p className="text-xs uppercase tracking-[0.18em] text-[var(--color-6)]">Serviço Imperium</p>

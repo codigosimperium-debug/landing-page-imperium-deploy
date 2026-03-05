@@ -1,6 +1,13 @@
 ﻿import { google } from "googleapis";
 
 const SCOPES = ["https://www.googleapis.com/auth/spreadsheets"];
+const DEFAULT_SHEETS_TIMEOUT_MS = Number(
+  process.env.GOOGLE_SHEETS_TIMEOUT_MS || "5200",
+);
+const RETRY_DELAY_MS = 220;
+const MAX_ATTEMPTS = 2;
+
+let sheetsClient: ReturnType<typeof google.sheets> | null = null;
 
 function getEnv(name: string): string {
   const value = process.env[name];
@@ -22,19 +29,80 @@ function createAuth() {
   });
 }
 
-export async function appendLeadRow(rowValues: string[]) {
+function getSheetsClient() {
+  if (sheetsClient) {
+    return sheetsClient;
+  }
+
+  sheetsClient = google.sheets({ version: "v4", auth: createAuth() });
+  return sheetsClient;
+}
+
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const timeout = setTimeout(() => {
+      reject(new Error(`Sheets timeout after ${timeoutMs}ms`));
+    }, timeoutMs);
+
+    promise
+      .then((value) => {
+        clearTimeout(timeout);
+        resolve(value);
+      })
+      .catch((error) => {
+        clearTimeout(timeout);
+        reject(error);
+      });
+  });
+}
+
+function wait(ms: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
+
+export type AppendLeadResult = {
+  attempts: number;
+  durationMs: number;
+};
+
+export async function appendLeadRow(rowValues: string[]): Promise<AppendLeadResult> {
   const spreadsheetId = getEnv("GOOGLE_SHEETS_ID");
   const range = process.env.GOOGLE_SHEETS_RANGE || "A:N";
+  const startedAt = Date.now();
+  const values = rowValues.map((value) => (value ?? "").toString());
 
-  const auth = createAuth();
-  const sheets = google.sheets({ version: "v4", auth });
+  let lastError: unknown = null;
 
-  await sheets.spreadsheets.values.append({
-    spreadsheetId,
-    range,
-    valueInputOption: "USER_ENTERED",
-    requestBody: {
-      values: [rowValues],
-    },
-  });
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
+    try {
+      const sheets = getSheetsClient();
+      await withTimeout(
+        sheets.spreadsheets.values.append({
+          spreadsheetId,
+          range,
+          valueInputOption: "RAW",
+          insertDataOption: "INSERT_ROWS",
+          requestBody: {
+            values: [values],
+          },
+        }),
+        DEFAULT_SHEETS_TIMEOUT_MS,
+      );
+
+      return {
+        attempts: attempt,
+        durationMs: Date.now() - startedAt,
+      };
+    } catch (error) {
+      lastError = error;
+
+      if (attempt < MAX_ATTEMPTS) {
+        await wait(RETRY_DELAY_MS * attempt);
+      }
+    }
+  }
+
+  throw lastError instanceof Error ? lastError : new Error("Sheets append failed");
 }

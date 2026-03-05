@@ -1,0 +1,10 @@
+*.log
+*.out.log
+*.err.log
+
+imperium-landing/.tmp/
+imperium-landing/*.log
+imperium-landing/*.out
+imperium-landing/*.err
+imperium-landing/lh-*.json
+

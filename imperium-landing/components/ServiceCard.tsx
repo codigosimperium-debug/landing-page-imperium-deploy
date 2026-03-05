@@ -1,7 +1,6 @@
 ﻿"use client";
 
 import Link from "next/link";
-import { motion, useReducedMotion } from "framer-motion";
 
 type ServiceCardProps = {
   href: string;
@@ -54,14 +53,8 @@ export default function ServiceCard({
   icon,
   buttonLabel = "Saiba Mais",
 }: ServiceCardProps) {
-  const shouldReduceMotion = useReducedMotion();
-
   return (
-    <motion.article
-      className="imperium-card service-card p-6"
-      whileHover={shouldReduceMotion ? undefined : { y: -3 }}
-      transition={{ duration: 0.2, ease: "easeOut" }}
-    >
+    <article className="imperium-card service-card p-6">
       <div className="inline-flex items-center gap-2 rounded-full border border-[var(--color-2)] bg-[var(--color-12)] px-3 py-1 text-[var(--color-1)]">
         <ServiceIcon icon={icon} />
         <span className="text-xs font-semibold uppercase tracking-[0.12em]">Serviço</span>
@@ -70,9 +63,13 @@ export default function ServiceCard({
       <h3 className="mt-5 text-2xl text-white">{title}</h3>
       <p className="mt-3 text-sm md:text-base">{description}</p>
 
-      <Link href={href} className="cta-primary mt-6 w-full text-center">
+      <Link
+        href={href}
+        className="cta-primary mt-6 w-full text-center"
+        data-track-click={`service_card_${icon}`}
+      >
         {buttonLabel}
       </Link>
-    </motion.article>
+    </article>
   );
 }

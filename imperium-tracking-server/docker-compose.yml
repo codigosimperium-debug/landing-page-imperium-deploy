@@ -1,0 +1,45 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: imperium-tracking-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: imperium_tracking
+      POSTGRES_USER: imperium
+      POSTGRES_PASSWORD: imperium
+    ports:
+      - "5433:5432"
+    volumes:
+      - tracking_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U imperium -d imperium_tracking"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  tracking-server:
+    build: .
+    container_name: imperium-tracking-server
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PORT: 4000
+      NODE_ENV: development
+      DATABASE_URL: postgres://imperium:imperium@postgres:5432/imperium_tracking
+      TRACKING_PUBLIC_KEY: local-public-key
+      ADMIN_PRIVATE_KEY: ylPM23wXd5M1HD-WfECI7aNOGyueKL84
+      ADMIN_USERNAME: imperium-admin
+      ADMIN_PASSWORD_HASH: scrypt$1e8dcb1f0a6f49a3b0d89b9828aeba03$3a026651916fa6e2b8ecd68000db9f4e94bd4ca59681035497703bab4b3235453079d4915c14237f61d952b8e473e550450049b0dd38ff2ff13fd56ca5417d0d
+      ADMIN_SESSION_SECRET: tracker-session-secret-local
+      ADMIN_SESSION_HOURS: 12
+      IP_HASH_SALT: local-ip-hash-salt
+      ALLOWED_ORIGINS: http://localhost:3000,https://academiaimperium.com.br,https://www.academiaimperium.com.br,https://finalxmodder.site,https://www.finalxmodder.site,https://imperiumpendente.online,https://www.imperiumpendente.online
+      INGEST_RATE_WINDOW_MS: 60000
+      INGEST_RATE_MAX: 120
+    ports:
+      - "4000:4000"
+
+volumes:
+  tracking_pg_data:

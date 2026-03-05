@@ -1,125 +1,143 @@
 ﻿"use client";
 
-import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useState } from "react";
+import Hero from "@/components/Hero";
 import Reveal, { RevealItem } from "@/components/Reveal";
 import ServiceCard from "@/components/ServiceCard";
+import UnitCards, { type UnitLocation } from "@/components/UnitCards";
 import WhatsAppFloating from "@/components/WhatsAppFloating";
 
+const UnitMapPanel = dynamic(() => import("@/components/UnitMapPanel"), {
+  ssr: false,
+  loading: () => null,
+});
+
 const setorizadoCards = [
-  { title: "Presença ativa", text: "Equipe presente durante o treino, não apenas na matrícula." },
-  { title: "Correção técnica", text: "Ajustes contínuos para manter execução precisa e segura." },
-  { title: "Direcionamento", text: "Evolução guiada com critério, sem improviso." },
-  { title: "Organização", text: "Rotina de atendimento setorizada e consistente." },
+  {
+    title: "Presença ativa",
+    text: "Equipe presente durante todo o treino, com atenção prática e contínua.",
+  },
+  {
+    title: "Correção técnica",
+    text: "Ajustes objetivos para manter execução precisa, segura e eficiente.",
+  },
+  {
+    title: "Direcionamento",
+    text: "Evolução com critério claro, sem improviso e com método.",
+  },
+  {
+    title: "Organização",
+    text: "Fluxo setorizado que sustenta consistência no atendimento diário.",
+  },
 ];
 
 const estruturaCards = [
   {
     title: "Padrão nas unidades",
-    text: "Colina de Laranjeiras, Chácara Parreiral e Jacaraípe seguem a mesma lógica de atendimento.",
+    text: "Jacaraípe, Chácara Parreiral e Colina de Laranjeiras seguem o mesmo padrão de método.",
+  },
+  {
+    title: "Ambiente premium",
+    text: "Estrutura funcional, visual limpo e foco total na execução do atendimento.",
   },
   {
     title: "Rotina organizada",
-    text: "Planejamento técnico, acompanhamento e registro de progresso de forma estruturada.",
-  },
-  {
-    title: "Ambiente premium e funcional",
-    text: "Estrutura pensada para fluidez operacional, foco e qualidade de execução.",
+    text: "Processo de avaliação, acompanhamento e direção de evolução com controle real.",
   },
 ];
 
 const avaliacaoSteps = [
-  "Escolha o serviço",
-  "Envie seus dados",
-  "Equipe confirma pelo WhatsApp",
+  {
+    title: "Escolha o serviço",
+    text: "Pilates, Eletroestimulação ou Treinamento Funcional.",
+  },
+  {
+    title: "Envie seu cadastro",
+    text: "Dados objetivos para a equipe organizar seu primeiro atendimento.",
+  },
+  {
+    title: "Equipe confirma pelo WhatsApp",
+    text: "Você recebe confirmação da unidade e disponibilidade de avaliação.",
+  },
 ];
 
-const unidades = [
+const units: UnitLocation[] = [
   {
-    nome: "Colina de Laranjeiras",
-    endereco: "Av. Guarapari, 12 - Serra, ES",
-    horario: "Segunda a sexta, 06h às 22h",
-    maps: "https://www.google.com/maps/search/?api=1&query=Colina+de+Laranjeiras+Serra+ES",
-  },
-  {
-    nome: "Chácara Parreiral",
-    endereco: "Av. Central, 245 - Serra, ES",
-    horario: "Segunda a sexta, 06h às 21h",
-    maps: "https://www.google.com/maps/search/?api=1&query=Ch%C3%A1cara+Parreiral+Serra+ES",
-  },
-  {
+    id: "jacaraipe",
     nome: "Jacaraípe",
-    endereco: "Av. Minas Gerais, 88 - Serra, ES",
-    horario: "Segunda a sábado, 06h às 20h",
-    maps: "https://www.google.com/maps/search/?api=1&query=Jacara%C3%ADpe+Serra+ES",
+    bairro: "Jacaraípe",
+    enderecoResumo: "Avenida Abido Saad, 2298, Jacaraipe, Serra - ES",
+    cep: "29175-585",
+    enderecoCompleto: "Avenida Abido Saad, 2298, Jacaraipe, Serra - ES, CEP 29175-585",
+  },
+  {
+    id: "parreiral",
+    nome: "Chácara Parreiral",
+    bairro: "Chácara Parreiral",
+    enderecoResumo: "Rua Gustavo Barroso, 570, Chácara Parreiral, Serra - ES",
+    cep: "29065-540",
+    enderecoCompleto: "Rua Gustavo Barroso, 570, Chácara Parreiral, Serra - ES, CEP 29065-540",
+  },
+  {
+    id: "colina",
+    nome: "Colina de Laranjeiras",
+    bairro: "Colina de Laranjeiras",
+    enderecoResumo: "Avenida Brauna, 1000, Colina de Laranjeiras, Serra - ES",
+    cep: "29167-124",
+    enderecoCompleto:
+      "Avenida Brauna, 1000, Colina de Laranjeiras, Serra - ES, CEP 29167-124",
   },
 ];
 
 const faqItems = [
   {
     q: "O professor dá atenção mesmo ou é só no início?",
-    a: "O acompanhamento é contínuo. A equipe atua por setores, com presença ativa e correção técnica durante o treino.",
+    a: "A atenção é contínua. O atendimento setorizado mantém presença ativa e correção técnica durante o treino.",
   },
   {
     q: "Eletroestimulação dói?",
-    a: "A sensação é controlada e ajustada por profissional. O protocolo é progressivo, respeitando seu nível atual.",
+    a: "A intensidade é ajustada por profissional. O processo é controlado e respeita seu nível atual.",
   },
   {
     q: "Pilates é só alongamento?",
-    a: "Não. O método trabalha força, mobilidade, estabilidade e consciência corporal com objetivo técnico definido.",
+    a: "Não. O método trabalha força, mobilidade, estabilidade e consciência corporal com foco técnico.",
   },
   {
     q: "Como escolher a unidade?",
-    a: "Após o cadastro, a equipe confirma sua avaliação considerando localização, rotina e disponibilidade de horários.",
+    a: "Após seu cadastro, a equipe direciona a melhor unidade conforme sua rotina e localização.",
   },
 ];
 
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [selectedUnit, setSelectedUnit] = useState<UnitLocation | null>(null);
+  const [isUnitDrawerOpen, setIsUnitDrawerOpen] = useState(false);
+  const [unitDrawerNonce, setUnitDrawerNonce] = useState(0);
+
+  const number = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
+  const directWhatsAppHref = number
+    ? `https://wa.me/55${number}?text=${encodeURIComponent(
+        "Quero tirar dúvidas individuais antes da avaliação.",
+      )}`
+    : "/#servicos";
+
+  function openUnitDrawer(unit: UnitLocation) {
+    setSelectedUnit(unit);
+    setUnitDrawerNonce((prev) => prev + 1);
+    setIsUnitDrawerOpen(true);
+  }
+
+  function onUnitDrawerChange(open: boolean) {
+    setIsUnitDrawerOpen(open);
+    if (!open) {
+      setSelectedUnit(null);
+    }
+  }
 
   return (
     <>
-      <Reveal as="section" className="imperium-section hero-section home-grid" stagger={0.08}>
-        <div className="imperium-container">
-          <div className="imperium-card hero-shell p-7 md:p-12">
-            <RevealItem>
-              <p className="hero-kicker text-xs uppercase tracking-[0.2em] text-[var(--color-6)] md:text-sm">
-                Imperium Academia
-              </p>
-            </RevealItem>
-
-            <RevealItem>
-              <h1 className="mt-4 text-[clamp(2rem,5.2vw,4.3rem)] font-extrabold leading-[1.02] tracking-[-0.045em]">
-                Imperium Academia
-              </h1>
-            </RevealItem>
-
-            <RevealItem>
-              <h2 className="mt-4 text-[clamp(1.1rem,2.1vw,1.85rem)] font-semibold text-white">
-                Referência em Atendimento Estruturado
-              </h2>
-            </RevealItem>
-
-            <RevealItem>
-              <p className="mt-5 max-w-2xl text-base md:text-lg">
-                Aqui o treino é acompanhado com organização, método e presença real
-                da equipe.
-              </p>
-            </RevealItem>
-
-            <RevealItem>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Link href="/#servicos" className="cta-primary">
-                  Escolher um serviço
-                </Link>
-                <Link href="/#unidades" className="cta-secondary">
-                  Ver unidades
-                </Link>
-              </div>
-            </RevealItem>
-          </div>
-        </div>
-      </Reveal>
+      <Hero />
 
       <Reveal as="section" id="metodo" className="imperium-section" stagger={0.08}>
         <div className="imperium-container">
@@ -127,8 +145,8 @@ export default function Home() {
             <p className="section-kicker">Núcleo Imperium</p>
             <h2 className="section-title">Atendimento Setorizado</h2>
             <p className="section-copy max-w-3xl">
-              Atenção é protocolo: setores, função definida e presença real durante
-              o treino.
+              Excelência no atendimento começa com estrutura clara de função, presença
+              real e método aplicado em cada sessão.
             </p>
           </RevealItem>
 
@@ -148,7 +166,7 @@ export default function Home() {
       <Reveal as="section" className="imperium-section imperium-section-alt" stagger={0.08}>
         <div className="imperium-container">
           <RevealItem>
-            <p className="section-kicker">Estrutura</p>
+            <p className="section-kicker">Estrutura premium</p>
             <h2 className="section-title">Estrutura que sustenta o método</h2>
           </RevealItem>
 
@@ -172,20 +190,47 @@ export default function Home() {
             <h2 className="section-title">Como funciona a avaliação</h2>
           </RevealItem>
 
-          <div className="mt-8 grid gap-3 md:grid-cols-3">
+          <div className="mt-8 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
             {avaliacaoSteps.map((step, index) => (
-              <RevealItem key={step}>
+              <RevealItem key={step.title}>
                 <div className="imperium-card step-card p-5">
                   <p className="step-index">0{index + 1}</p>
-                  <p className="mt-2 text-base text-white">{step}</p>
+                  <p className="mt-2 text-base text-white">{step.title}</p>
+                  <p className="mt-2 text-sm">{step.text}</p>
                 </div>
               </RevealItem>
             ))}
+
+            <RevealItem>
+              <div className="imperium-card step-card step-contact-card p-5">
+                <p className="step-index">04</p>
+                <p className="mt-2 text-base text-white">
+                  Prefere tirar dúvidas individuais antes?
+                </p>
+                <p className="mt-2 text-sm">
+                  Nossa equipe pode orientar você antes da avaliação.
+                </p>
+                <a
+                  href={directWhatsAppHref}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="cta-secondary mt-4 w-full"
+                  data-track-click="home_direct_whatsapp"
+                >
+                  Falar com a Imperium
+                </a>
+              </div>
+            </RevealItem>
           </div>
         </div>
       </Reveal>
 
-      <Reveal as="section" id="servicos" className="imperium-section imperium-section-alt" stagger={0.08}>
+      <Reveal
+        as="section"
+        id="servicos"
+        className="imperium-section imperium-section-alt"
+        stagger={0.08}
+      >
         <div className="imperium-container">
           <RevealItem>
             <p className="section-kicker">Serviços</p>
@@ -231,20 +276,7 @@ export default function Home() {
             <h2 className="section-title">Atendimento estruturado nas três unidades</h2>
           </RevealItem>
 
-          <div className="mt-8 grid gap-4 lg:grid-cols-3">
-            {unidades.map((u) => (
-              <RevealItem key={u.nome}>
-                <article className="imperium-card unidade-card p-5">
-                  <h3 className="text-xl text-white">{u.nome}</h3>
-                  <p className="mt-2 text-sm">{u.endereco}</p>
-                  <p className="mt-1 text-sm text-[var(--color-6)]">{u.horario}</p>
-                  <a href={u.maps} target="_blank" rel="noreferrer" className="cta-secondary mt-5">
-                    Abrir no Maps
-                  </a>
-                </article>
-              </RevealItem>
-            ))}
-          </div>
+          <UnitCards units={units} onSelect={openUnitDrawer} />
         </div>
       </Reveal>
 
@@ -268,7 +300,7 @@ export default function Home() {
                       onClick={() => setOpenFaq((prev) => (prev === index ? null : index))}
                     >
                       <span>{item.q}</span>
-                      <span className="faq-indicator">{open ? "−" : "+"}</span>
+                      <span className="faq-indicator">{open ? "-" : "+"}</span>
                     </button>
                     {open ? <p className="faq-answer">{item.a}</p> : null}
                   </article>
@@ -279,6 +311,12 @@ export default function Home() {
         </div>
       </Reveal>
 
+      <UnitMapPanel
+        key={`unit-drawer-${unitDrawerNonce}`}
+        selectedUnit={selectedUnit}
+        open={isUnitDrawerOpen}
+        onOpenChange={onUnitDrawerChange}
+      />
       <WhatsAppFloating />
     </>
   );

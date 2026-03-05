@@ -10,12 +10,11 @@ type RevealProps = {
   as?: "div" | "section" | "article";
   delay?: number;
   y?: number;
-  blur?: boolean;
   stagger?: number;
 };
 
 const defaultTransition = {
-  duration: 0.58,
+  duration: 0.42,
 };
 
 export default function Reveal({
@@ -24,8 +23,7 @@ export default function Reveal({
   id,
   as = "div",
   delay = 0,
-  y = 12,
-  blur = false,
+  y = 10,
   stagger = 0,
 }: RevealProps) {
   const reduceMotion = useReducedMotion();
@@ -34,12 +32,10 @@ export default function Reveal({
     hidden: {
       opacity: reduceMotion ? 1 : 0,
       y: reduceMotion ? 0 : y,
-      filter: reduceMotion ? "blur(0px)" : blur ? "blur(2px)" : "blur(0px)",
     },
     show: {
       opacity: 1,
       y: 0,
-      filter: "blur(0px)",
       transition: {
         ...defaultTransition,
         delay: reduceMotion ? 0 : delay,
@@ -57,7 +53,7 @@ export default function Reveal({
         variants={variants}
         initial="hidden"
         whileInView="show"
-        viewport={{ once: true, amount: 0.24 }}
+        viewport={{ once: true, amount: 0.18 }}
       >
         {children}
       </motion.section>
@@ -72,7 +68,7 @@ export default function Reveal({
         variants={variants}
         initial="hidden"
         whileInView="show"
-        viewport={{ once: true, amount: 0.24 }}
+        viewport={{ once: true, amount: 0.18 }}
       >
         {children}
       </motion.article>
@@ -86,7 +82,7 @@ export default function Reveal({
       variants={variants}
       initial="hidden"
       whileInView="show"
-      viewport={{ once: true, amount: 0.24 }}
+      viewport={{ once: true, amount: 0.18 }}
     >
       {children}
     </motion.div>

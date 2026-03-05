@@ -20,6 +20,7 @@ export type LeadPayload = {
   whatsapp: string;
   email: string;
   unidade: UnitType;
+  session_id?: string;
   page_path: string;
   utm_source: string;
   utm_medium: string;
@@ -59,6 +60,12 @@ function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i.test(email);
 }
 
+function isValidUuid(value: string): boolean {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+    value,
+  );
+}
+
 export function formatWhatsApp(value: string): string {
   const digits = toDigits(value).slice(0, 11);
 
@@ -90,6 +97,7 @@ export function buildLeadValidationInput(
     whatsapp: toSanitizedText(payload.whatsapp, 30),
     email: toSanitizedText(payload.email, 160).toLowerCase(),
     unidade: toSanitizedText(payload.unidade, 60) as UnitType,
+    session_id: toSanitizedText(payload.session_id, 80) || undefined,
     page_path: toSanitizedText(payload.page_path, 120),
     utm_source: toSanitizedText(payload.utm_source, 120),
     utm_medium: toSanitizedText(payload.utm_medium, 120),
@@ -123,6 +131,10 @@ export function validateLeadPayload(input: LeadPayload): ValidationResult {
 
   if (!VALID_UNITS.includes(input.unidade)) {
     errors.push("Selecione uma unidade válida.");
+  }
+
+  if (input.session_id && !isValidUuid(input.session_id)) {
+    errors.push("Sessão inválida.");
   }
 
   if (!input.page_path.startsWith("/")) {

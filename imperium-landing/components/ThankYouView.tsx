@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { useEffect } from "react";
 import { trackLead, trackPageView } from "@/lib/metaPixel";
+import { track } from "@/lib/trackingClient";
 
 type ThankYouViewProps = {
   title: string;
@@ -32,10 +33,11 @@ export default function ThankYouView({ title, description, bullets }: ThankYouVi
   useEffect(() => {
     trackPageView();
     trackLead();
+    void track("thank_you_view");
   }, []);
 
   return (
-    <section className="imperium-section">
+    <section className="imperium-section service-page">
       <div className="imperium-container">
         <motion.div
           className="imperium-card mx-auto max-w-2xl p-8 md:p-10"
@@ -59,10 +61,10 @@ export default function ThankYouView({ title, description, bullets }: ThankYouVi
           </div>
 
           <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:justify-center">
-            <Link href="/" className="cta-primary">
+            <Link href="/" className="cta-primary" data-track-click="thankyou_back_home">
               Voltar para a Home
             </Link>
-            <Link href="/#unidades" className="cta-secondary">
+            <Link href="/#unidades" className="cta-secondary" data-track-click="thankyou_view_units">
               Ver Unidades
             </Link>
           </div>

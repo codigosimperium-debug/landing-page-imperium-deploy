@@ -3,16 +3,19 @@ import { Manrope, Sora } from "next/font/google";
 import Script from "next/script";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import SmoothScroll from "@/components/SmoothScroll";
+import TrackingClickCapture from "@/components/TrackingClickCapture";
+import TrackingPageView from "@/components/TrackingPageView";
 import "./globals.css";
 
 const sora = Sora({
   subsets: ["latin"],
+  weight: ["600", "700"],
   variable: "--font-display",
 });
 
 const manrope = Manrope({
   subsets: ["latin"],
+  weight: ["400", "600"],
   variable: "--font-body",
 });
 
@@ -31,7 +34,8 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={`${sora.variable} ${manrope.variable}`}>
-        <SmoothScroll />
+        <TrackingPageView />
+        <TrackingClickCapture />
         {pixelId ? (
           <>
             <Script id="meta-pixel-base" strategy="afterInteractive">
@@ -57,7 +61,7 @@ fbq('track', 'PageView');`}
         ) : null}
 
         <Header />
-        <main className="pt-24 lg:pt-28">{children}</main>
+        <main>{children}</main>
         <Footer />
       </body>
     </html>

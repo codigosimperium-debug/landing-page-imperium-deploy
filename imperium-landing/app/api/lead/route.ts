@@ -1,11 +1,8 @@
 ﻿import { NextRequest, NextResponse } from "next/server";
-import { appendLeadRow } from "@/lib/sheets";
+import { parseLeadRequest } from "@/lib/leadSchema";
 import { checkRateLimit } from "@/lib/rateLimit";
-import {
-  type LeadPayload,
-  buildLeadValidationInput,
-  validateLeadPayload,
-} from "@/lib/validators";
+import { appendLeadRow } from "@/lib/sheets";
+import { sendLeadCreatedToTracking } from "@/lib/trackingServer";
 
 export const runtime = "nodejs";
 
@@ -19,12 +16,16 @@ function getClientIp(request: NextRequest): string {
 }
 
 export async function POST(request: NextRequest) {
+  const t0 = Date.now();
+
   try {
     const body = await request.json();
+    const t1 = Date.now();
+
     const ip = getClientIp(request);
     const headerUserAgent = request.headers.get("user-agent") || "";
-
     const limit = checkRateLimit(`${ip}:${headerUserAgent}`);
+
     if (!limit.ok) {
       return NextResponse.json(
         {
@@ -40,25 +41,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const candidate = buildLeadValidationInput(body, {
+    const validation = parseLeadRequest(body, {
       ip,
-      userAgent: headerUserAgent,
+      headerUserAgent,
     });
 
-    const validation = validateLeadPayload(candidate);
     if (!validation.ok) {
       return NextResponse.json(
         {
           ok: false,
-          error: validation.errors[0] ?? "Dados inválidos.",
+          error: validation.error,
         },
         { status: 400 },
       );
     }
 
-    const lead: LeadPayload = validation.data;
+    const lead = validation.data;
+    const t2 = Date.now();
 
-    await appendLeadRow([
+    const sheetResult = await appendLeadRow([
       lead.created_at,
       lead.interesse,
       lead.nomeCompleto,
@@ -75,8 +76,35 @@ export async function POST(request: NextRequest) {
       lead.ip,
     ]);
 
+    const t3 = Date.now();
+    console.info(
+      `[lead-api] json=${t1 - t0}ms validate=${t2 - t1}ms sheets=${sheetResult.durationMs}ms attempts=${sheetResult.attempts} total=${t3 - t0}ms`,
+    );
+
+    void sendLeadCreatedToTracking({
+      sessionId: lead.session_id,
+      pagePath: lead.page_path,
+      utm_source: lead.utm_source,
+      utm_medium: lead.utm_medium,
+      utm_campaign: lead.utm_campaign,
+      utm_content: lead.utm_content,
+      utm_term: lead.utm_term,
+      service_interest: lead.interesse,
+      name: lead.nomeCompleto,
+      whatsapp: lead.whatsapp,
+      email: lead.email,
+      unit: lead.unidade,
+      goal: "",
+    });
+
     return NextResponse.json({ ok: true });
-  } catch {
+  } catch (error) {
+    const tErr = Date.now();
+    const message =
+      error instanceof Error ? error.message : "unexpected_error";
+
+    console.error(`[lead-api] failed after ${tErr - t0}ms: ${message}`);
+
     return NextResponse.json(
       {
         ok: false,

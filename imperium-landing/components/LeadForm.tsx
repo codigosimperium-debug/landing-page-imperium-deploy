@@ -3,6 +3,7 @@
 import { useReducedMotion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { getSessionId, track } from "@/lib/trackingClient";
 import { getStoredUtmParams, type UTMState } from "@/lib/utm";
 import {
   type InterestType,
@@ -14,8 +15,6 @@ import {
 type LeadFormProps = {
   interesse: InterestType;
   submitLabel: string;
-  imageSrc?: string;
-  imageAlt?: string;
 };
 
 type FormState = {
@@ -40,12 +39,7 @@ const REDIRECT_BY_INTEREST: Record<InterestType, string> = {
   "Treinamento Funcional": "/obrigado/treinamento-funcional",
 };
 
-export default function LeadForm({
-  interesse,
-  submitLabel,
-  imageSrc,
-  imageAlt = "Espaço da Imperium Academia",
-}: LeadFormProps) {
+export default function LeadForm({ interesse, submitLabel }: LeadFormProps) {
   const shouldReduceMotion = useReducedMotion();
   const router = useRouter();
 
@@ -60,12 +54,15 @@ export default function LeadForm({
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState("");
+  const [sessionId, setSessionId] = useState("");
 
   const intervalRef = useRef<number | null>(null);
   const timeoutRef = useRef<number | null>(null);
+  const startedRef = useRef(false);
 
   useEffect(() => {
     setUtmState(getStoredUtmParams());
+    setSessionId(getSessionId());
   }, []);
 
   useEffect(() => {
@@ -85,10 +82,24 @@ export default function LeadForm({
       interesse,
       page_path: typeof window === "undefined" ? "" : window.location.pathname,
       user_agent: typeof navigator === "undefined" ? "" : navigator.userAgent,
+      session_id: sessionId,
       ...utmState,
     }),
-    [form, interesse, utmState],
+    [form, interesse, sessionId, utmState],
   );
+
+  function onFirstFocus() {
+    if (startedRef.current) {
+      return;
+    }
+
+    startedRef.current = true;
+    void track("form_start", {
+      props: {
+        interesse,
+      },
+    });
+  }
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -98,6 +109,11 @@ export default function LeadForm({
     }
 
     setError("");
+    void track("form_submit", {
+      props: {
+        interesse,
+      },
+    });
 
     const validation = validateLeadPayload({
       ...payload,
@@ -112,19 +128,38 @@ export default function LeadForm({
 
     setSubmitState("sending");
 
+    let abortTimeout: number | null = null;
+
     try {
+      const controller = new AbortController();
+      abortTimeout = window.setTimeout(() => controller.abort(), 9000);
+
       const response = await fetch("/api/lead", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        cache: "no-store",
+        signal: controller.signal,
         body: JSON.stringify(payload),
       });
+      window.clearTimeout(abortTimeout);
+      abortTimeout = null;
 
-      const data = await response.json();
+      const data = (await response.json().catch(() => ({}))) as {
+        ok?: boolean;
+        error?: string;
+      };
       if (!response.ok || !data?.ok) {
         throw new Error(data?.error || "Não foi possível enviar agora.");
       }
+
+      void track("form_success", {
+        props: {
+          interesse,
+          unidade: form.unidade,
+        },
+      });
 
       setSubmitState("confirmed");
       setProgress(shouldReduceMotion ? 100 : 12);
@@ -155,10 +190,16 @@ export default function LeadForm({
       setSubmitState("idle");
       setProgress(0);
       setError(
-        submitError instanceof Error
-          ? submitError.message
-          : "Erro ao enviar. Tente novamente.",
+        submitError instanceof Error && submitError.name === "AbortError"
+          ? "Tempo de resposta esgotado. Tente novamente."
+          : submitError instanceof Error
+            ? submitError.message
+            : "Erro ao enviar. Tente novamente.",
       );
+    } finally {
+      if (abortTimeout !== null) {
+        window.clearTimeout(abortTimeout);
+      }
     }
   }
 
@@ -173,10 +214,12 @@ export default function LeadForm({
     <div className="grid gap-5 lg:grid-cols-[1.08fr_0.92fr]">
       <form
         onSubmit={onSubmit}
+        onFocusCapture={onFirstFocus}
         noValidate
         className="imperium-card lead-console space-y-4 p-6 md:p-8"
       >
         <input type="hidden" name="interesse" value={interesse} />
+        <input type="hidden" name="session_id" value={sessionId} />
 
         <div className="space-y-1.5">
           <label htmlFor="nomeCompleto" className="text-sm font-semibold text-white">
@@ -274,6 +317,7 @@ export default function LeadForm({
 
         <button
           type="submit"
+          data-track-click="lead_form_submit"
           className="cta-primary h-[48px] w-full"
           disabled={submitState !== "idle"}
         >
@@ -304,17 +348,6 @@ export default function LeadForm({
             <span>3)</span> Direção de evolução (organizada e clara)
           </li>
         </ol>
-
-        {imageSrc ? (
-          <div className="protocol-image-slot mt-5">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={imageSrc} alt={imageAlt} className="h-full w-full object-cover" />
-          </div>
-        ) : (
-          <div className="protocol-image-slot mt-5 protocol-image-placeholder">
-            Espaço para imagem institucional
-          </div>
-        )}
       </aside>
     </div>
   );
