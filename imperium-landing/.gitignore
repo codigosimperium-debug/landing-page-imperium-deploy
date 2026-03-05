@@ -46,3 +46,5 @@ lh-*.json
 next-env.d.ts
 
 .tmp/
+
+.vercel
