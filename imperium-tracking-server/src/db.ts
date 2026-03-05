@@ -8,18 +8,37 @@ function shouldUseSsl(connectionString: string): boolean {
     return false;
   }
 
-  return url.includes("sslmode=require");
+  return (
+    url.includes("sslmode=require") ||
+    url.includes("sslmode=verify-ca") ||
+    url.includes("sslmode=verify-full") ||
+    url.includes(".render.com")
+  );
+}
+
+function sanitizeConnectionStringForPg(connectionString: string): string {
+  try {
+    const parsed = new URL(connectionString);
+    parsed.searchParams.delete("sslmode");
+    parsed.searchParams.delete("ssl");
+    parsed.searchParams.delete("uselibpqcompat");
+    return parsed.toString();
+  } catch {
+    return connectionString;
+  }
 }
 
 function buildConnectionConfig() {
+  const connectionString = sanitizeConnectionStringForPg(config.databaseUrl);
+
   if (shouldUseSsl(config.databaseUrl)) {
     return {
-      connectionString: config.databaseUrl,
+      connectionString,
       ssl: { rejectUnauthorized: false },
     };
   }
 
-  return config.databaseUrl;
+  return connectionString;
 }
 
 export const db: Knex = knex({
