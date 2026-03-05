@@ -18,9 +18,34 @@ function getEnv(name: string): string {
   return value;
 }
 
+function stripWrappingQuotes(value: string): string {
+  const trimmed = value.trim();
+
+  if (
+    (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+    (trimmed.startsWith("'") && trimmed.endsWith("'"))
+  ) {
+    return trimmed.slice(1, -1).trim();
+  }
+
+  return trimmed;
+}
+
+function normalizePrivateKey(value: string): string {
+  let normalized = stripWrappingQuotes(value).replace(/\r/g, "");
+
+  // Supports values coming as "\\n" or "\\\\n" from env providers.
+  while (normalized.includes("\\\\n")) {
+    normalized = normalized.replace(/\\\\n/g, "\\n");
+  }
+
+  normalized = normalized.replace(/\\n/g, "\n");
+  return normalized;
+}
+
 function createAuth() {
-  const clientEmail = getEnv("GOOGLE_CLIENT_EMAIL");
-  const privateKey = getEnv("GOOGLE_PRIVATE_KEY").replace(/\\n/g, "\n");
+  const clientEmail = stripWrappingQuotes(getEnv("GOOGLE_CLIENT_EMAIL"));
+  const privateKey = normalizePrivateKey(getEnv("GOOGLE_PRIVATE_KEY"));
 
   return new google.auth.JWT({
     email: clientEmail,
